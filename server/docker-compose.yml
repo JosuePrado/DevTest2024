@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres
+    container_name: server
+    restart: always
+    environment:
+      POSTGRES_DB: server_db
+      POSTGRES_USER: ${DB_USER} 
+      POSTGRES_PASSWORD: ${DB_PASSWORD} 
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data 
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: ecommers_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_EMAIL} 
+      PGADMIN_DEFAULT_PASSWORD: ${PG_PASSWORD} 
+      PGADMIN_LISTEN_PORT: 4050
+    ports:
+      - 4050:4050
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+volumes:
+  pgadmin-data:
+  postgres-data:
